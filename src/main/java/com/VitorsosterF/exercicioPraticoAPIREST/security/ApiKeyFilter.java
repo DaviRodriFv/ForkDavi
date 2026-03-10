@@ -22,6 +22,8 @@ public class ApiKeyFilter extends OncePerRequestFilter {
                                     FilterChain filterChain)
             throws ServletException, IOException {
 
+        if (request.getRequestURI().startsWith("/public")) { filterChain.doFilter(request, response); return; }
+
         String requestApiKey = request.getHeader("X-API-KEY");
 
         if (requestApiKey == null || !requestApiKey.equals(validApiKey)) {
