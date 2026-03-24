@@ -7,6 +7,7 @@ class CaminhaoJoaoTest(HttpUser):
 
     @task
     def criar_e_buscar_caminhao(self):
+        # Criar caminhão
         response = self.client.post(
             "/api/caminhao",
             json={
@@ -18,9 +19,11 @@ class CaminhaoJoaoTest(HttpUser):
             }
         )
 
+        # Se criou com sucesso
         if response.status_code in [200, 201]:
             data = response.json()
             caminhao_id = data.get("id")
 
+            # Buscar caminhão criado
             if caminhao_id:
                 self.client.get(f"/api/caminhao/{caminhao_id}")
