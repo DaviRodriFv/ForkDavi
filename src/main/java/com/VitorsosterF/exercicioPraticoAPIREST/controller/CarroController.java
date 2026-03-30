@@ -1,6 +1,7 @@
 package com.VitorsosterF.exercicioPraticoAPIREST.controller;
 
 import com.VitorsosterF.exercicioPraticoAPIREST.model.Carro;
+import com.VitorsosterF.exercicioPraticoAPIREST.queue.CarroIntegracaoQueue;
 import com.VitorsosterF.exercicioPraticoAPIREST.repository.CarroRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -14,13 +15,20 @@ public class CarroController {
     @Autowired
     private final CarroRepository carroRepository;
 
+    @Autowired
+    private CarroIntegracaoQueue integracaoQueue;
+
     public CarroController(CarroRepository carroRepository) {
         this.carroRepository = carroRepository;
     }
 
     @PostMapping
     public Carro criarCarro(@RequestBody Carro carro) {
-        return carroRepository.save(carro);
+        Carro salvo = carroRepository.save(carro);
+
+        integracaoQueue.enfileirar(salvo);
+
+        return salvo;
     }
 
     @GetMapping
@@ -33,7 +41,6 @@ public class CarroController {
         return carroRepository.findById(id).orElse(null);
     }
 
-    // PUT /api/carro/{id}
     @PutMapping("/{id}")
     public Carro atualizarCarro(@PathVariable Integer id, @RequestBody Carro novoCarro) {
         return carroRepository.findById(id).map(carro -> {
@@ -44,7 +51,6 @@ public class CarroController {
         }).orElse(null);
     }
 
-    // DELETE /api/carro/{id}
     @DeleteMapping("/{id}")
     public boolean deletar(@PathVariable Integer id) {
         if (carroRepository.existsById(id)) {
