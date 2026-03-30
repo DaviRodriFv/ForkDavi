@@ -22,7 +22,7 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
 
-        
+
         http
                 .csrf(csrf -> csrf.disable())
 
@@ -30,10 +30,13 @@ public class SecurityConfig {
                         session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 )
 
+                .headers(headers -> headers.frameOptions(frame -> frame.sameOrigin()))
+
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/actuator/health").permitAll()
                         .requestMatchers("/public/**").permitAll()
+                        .requestMatchers("/admin/**").permitAll()
                         .requestMatchers("/api/**").authenticated()
+                        .requestMatchers("/h2/**").permitAll()
                         .anyRequest().denyAll()
                 )
 

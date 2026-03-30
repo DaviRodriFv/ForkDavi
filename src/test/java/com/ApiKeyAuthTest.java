@@ -18,21 +18,21 @@ public class ApiKeyAuthTest {
 
     @Test
     void devePermitirAcessoComApiKeyValida() throws Exception {
-        mockMvc.perform(get("/carros")
+        mockMvc.perform(get("/carro")
                 .header("X-API-KEY", "minha-chave-secreta-123"))
                 .andExpect(status().isOk());
     }
 
     @Test
     void deveNegarAcessoComApiKeyInvalida() throws Exception {
-        mockMvc.perform(get("/carros")
+        mockMvc.perform(get("/carro")
                 .header("X-API-KEY", "chave_errada"))
                 .andExpect(status().isUnauthorized());
     }
 
     @Test
     void deveNegarAcessoSemApiKey() throws Exception {
-        mockMvc.perform(get("/carros"))
+        mockMvc.perform(get("/carro"))
                 .andExpect(status().isUnauthorized());
     }
 }
