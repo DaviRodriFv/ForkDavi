@@ -1,6 +1,7 @@
 package com.VitorsosterF.exercicioPraticoAPIREST.controller;
 
 import com.VitorsosterF.exercicioPraticoAPIREST.model.Carro;
+import com.VitorsosterF.exercicioPraticoAPIREST.queue.CarroIntegracaoQueue;
 import com.VitorsosterF.exercicioPraticoAPIREST.repository.CarroRepository;
 import com.VitorsosterF.exercicioPraticoAPIREST.service.CarroThreadService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,7 +17,7 @@ public class CarroController {
     private final CarroRepository carroRepository;
 
     @Autowired
-    private CarroThreadService carroThreadService;
+    private CarroIntegracaoQueue integracaoQueue;
 
     public CarroController(CarroRepository carroRepository) {
         this.carroRepository = carroRepository;
@@ -39,7 +40,6 @@ public class CarroController {
         return carroRepository.findById(id).orElse(null);
     }
 
-    // PUT /api/carro/{id}
     @PutMapping("/{id}")
     public Carro atualizarCarro(@PathVariable Integer id, @RequestBody Carro novoCarro) {
         return carroRepository.findById(id).map(carro -> {
@@ -50,7 +50,6 @@ public class CarroController {
         }).orElse(null);
     }
 
-    // DELETE /api/carro/{id}
     @DeleteMapping("/{id}")
     public boolean deletar(@PathVariable Integer id) {
         if (carroRepository.existsById(id)) {
